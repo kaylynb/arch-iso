@@ -1,0 +1,16 @@
+{
+  "name": "generate-iso",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mz": "^2.1.0",
+    "nunjucks": "^2.2.0",
+    "ramda": "^0.18.0"
+  }
+}
