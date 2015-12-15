@@ -8,6 +8,15 @@
 			"mkpart primary ext4 513MiB 100%"
 		]
 	},
+	"fs": {
+		"boot": {
+			"format": true,
+			"disk": "/dev/sda1"
+		},
+		"system": {
+			"disk": "/dev/sda2"
+		}
+	},
 	"packages": {
 		"aur": [
 			"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz",

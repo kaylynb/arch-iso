@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 mkdir -p /archiso
 cp -r /usr/share/archiso/configs/releng/* /archiso
 
@@ -28,6 +30,10 @@ repo-add /aurpkgs/repo/aurpkgs.db.tar.gz /aurpkgs/repo/*.pkg.tar.xz
 echo "[aurpkgs]
 SigLevel = Optional TrustAll
 Server = file:///aurpkgs/repo" >> /archiso/pacman.conf
+
+cp -r /isofiles/* /archiso/airootfs/
+
+chmod +x /archiso/airootfs/root/install.sh
 
 cd /archiso
 echo "{{ packages.iso | join("\n") }}" >> packages.x86_64

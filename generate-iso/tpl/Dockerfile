@@ -5,4 +5,4 @@ RUN pacman -Syyu --noconfirm; pacman -S --noconfirm git base-devel archiso {{ pa
 COPY build-iso.sh /usr/bin/
 RUN chmod u+x /usr/bin/build-iso.sh
 
-COPY install.sh /isofiles/
+COPY isofiles/ /isofiles/

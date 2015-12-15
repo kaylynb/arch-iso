@@ -5,6 +5,7 @@ const shelljs = require('shelljs')
 const co = require('co')
 const path = require('path')
 const fs = require('mz/fs')
+const mkdirp = require('thenify')(require('mkdirp'))
 
 const config = require('./vm.json')
 
@@ -36,31 +37,13 @@ const setBuildDirectory = function * () {
 	console.log(`Build directory created [${buildDirectory}]`)
 }
 
-const createBuild = function * () {
-	yield fs.writeFile(
-		path.resolve(buildDirectory, 'build-iso.sh'),
-		nunjucks.render(
-			path.resolve(__dirname, 'tpl/build-iso.sh'),
-			config
-		)
-	)
-}
+const renderTpl = function * (filePath) {
+	yield mkdirp(path.resolve(buildDirectory, path.dirname(filePath)))
 
-const createInstall = function * () {
 	yield fs.writeFile(
-		path.resolve(buildDirectory, 'install.sh'),
+		path.resolve(buildDirectory, filePath),
 		nunjucks.render(
-			path.resolve(__dirname, 'tpl/install.sh'),
-			config
-		)
-	)
-}
-
-const createDockerfile = function * () {
-	yield fs.writeFile(
-		path.resolve(buildDirectory, 'Dockerfile'),
-		nunjucks.render(
-			path.resolve(__dirname, 'tpl/Dockerfile'),
+			path.resolve(__dirname, path.join('tpl', filePath)),
 			config
 		)
 	)
@@ -69,9 +52,10 @@ const createDockerfile = function * () {
 co(function * () {
 	try {
 		yield setBuildDirectory()
-		yield createBuild()
-		yield createInstall()
-		yield createDockerfile()
+		yield renderTpl('build-iso.sh')
+		yield renderTpl('isofiles/root/install.sh')
+		yield renderTpl('Dockerfile')
+		yield renderTpl('isofiles/etc/vconsole.conf')
 	} finally {
 		if (buildDirectory) {
 			// console.log(`Removing build directory [${buildDirectory}]`)
