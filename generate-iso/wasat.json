@@ -1,0 +1,37 @@
+{
+	"hostname": "vm",
+	"localtime": "America/Los_Angeles",
+	"parted": {
+		"disk": "/dev/sda",
+		"commands": [
+			"mklabel gpt",
+			"mkpart ESP fat32 1MiB 513MiB",
+			"set 1 boot on",
+			"mkpart primary ext4 513MiB 100%"
+		]
+	},
+	"fs": {
+		"boot": {
+			"format": true,
+			"disk": "/dev/sda1"
+		},
+		"system": {
+			"disk": "/dev/sda2"
+		}
+	},
+	"packages": {
+		"aur": [
+			"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz",
+			"https://aur.archlinux.org/cgit/aur.git/snapshot/broadcom-wl-dkms.tar.gz"
+		],
+		"dependencies": [
+			"abs",
+			"dkms",
+			"linux-headers"
+		],
+		"iso": [
+			"aura-bin",
+			"broadcom-wl-dkms"
+		]
+	}
+}

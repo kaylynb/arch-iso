@@ -1,4 +1,6 @@
 {
+	"hostname": "vm",
+	"localtime": "America/Los_Angeles",
 	"parted": {
 		"disk": "/dev/sda",
 		"commands": [
@@ -18,18 +20,39 @@
 		}
 	},
 	"packages": {
-		"aur": [
-			"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz",
-			"https://aur.archlinux.org/cgit/aur.git/snapshot/broadcom-wl-dkms.tar.gz"
-		],
-		"dependencies": [
-			"abs",
-			"dkms",
-			"linux-headers"
-		],
-		"iso": [
-			"aura-bin",
-			"broadcom-wl-dkms"
+		"iso": {
+			"aur": [
+				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
+			],
+			"dependencies": [
+				"abs"
+			],
+			"packages": [
+				"aura-bin"
+			]
+		},
+		"system": {
+			"aur": [
+				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
+			],
+			"packages": [
+				"abs"
+			]
+		}
+	},
+	"mkinitcpio": {
+		"hooks": [
+			"base",
+			"udev",
+			"autodetect",
+			"modconf",
+			"block",
+			"keymap",
+			"keyboard",
+			"encrypt",
+			"lvm2",
+			"filesystems",
+			"fsck"
 		]
 	}
 }

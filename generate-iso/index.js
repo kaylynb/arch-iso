@@ -52,8 +52,10 @@ const renderTpl = function * (filePath) {
 co(function * () {
 	try {
 		yield setBuildDirectory()
+		shelljs.cp('-R', path.resolve(__dirname, 'isofiles/*'), path.join(buildDirectory, 'isofiles/'))
 		yield renderTpl('build-iso.sh')
 		yield renderTpl('isofiles/root/install.sh')
+		yield renderTpl('isofiles/root/chroot-install.sh')
 		yield renderTpl('Dockerfile')
 		yield renderTpl('isofiles/etc/vconsole.conf')
 	} finally {

@@ -10,8 +10,7 @@ chmod -R 777 /aurpkgs
 
 cd /aurpkgs
 
-
-{% for package in packages.aur %}
+{% for package in packages.iso.aur %}
 echo 'Building {{package}}'
 mkdir build
 cd build
@@ -34,8 +33,12 @@ Server = file:///aurpkgs/repo" >> /archiso/pacman.conf
 cp -r /isofiles/* /archiso/airootfs/
 
 chmod +x /archiso/airootfs/root/install.sh
+rm /archiso/airootfs/root/install.txt
 
 cd /archiso
-echo "{{ packages.iso | join("\n") }}" >> packages.x86_64
+echo "{{ packages.iso.packages | join("\n") }}" >> packages.x86_64
+
+sed -i 's@curl -o ${work_dir}/${arch}/airootfs/etc/pacman.d/mirrorlist@#@' build.sh
+sed -i 's/lynx -dump -nolist/#/' build.sh
 
 ./build.sh -v
