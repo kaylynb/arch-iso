@@ -30,6 +30,6 @@ genfstab -U -p /mnt > /mnt/etc/fstab
 
 cp ~/chroot-install.sh /mnt/
 
-arch-chroot /mnt /bin/bash -vx /chroot-install.sh
+arch-chroot /mnt /bin/bash -vx /chroot-install.sh `lsblk -no UUID {{ fs.system.disk }} | head -1`
 
 rm /mnt/chroot-install.sh

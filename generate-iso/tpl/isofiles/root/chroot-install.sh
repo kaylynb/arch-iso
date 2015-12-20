@@ -22,6 +22,7 @@ echo LANG=en_US.UTF-8 > /etc/locale.conf
 export LANG=en_US.UTF-8
 
 echo KEYMAP=colemak > /etc/vconsole.conf
+{% if consolefont %}echo "FONT={{ consolefont }}" >> /etc/vconsole.conf{% endif %}
 
 ln -s /usr/share/zoneinfo/{{ localtime }} /etc/localtime
 hwclock --systohc --utc
@@ -47,7 +48,7 @@ cat << EOF > /boot/loader/entries/arch.conf
 title	Arch Linux
 linux	/vmlinuz-linux
 initrd	/initramfs-linux.img
-options	cryptdevice={{ fs.system.disk }}:main:allow-discards root=/dev/mapper/main-root rw
+options	cryptdevice=/dev/disk/by-uuid/$1:main:allow-discards root=/dev/mapper/main-root rw
 EOF
 
 echo "default arch" > /boot/loader/loader.conf
