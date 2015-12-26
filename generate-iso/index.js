@@ -7,7 +7,7 @@ const path = require('path')
 const fs = require('mz/fs')
 const mkdirp = require('thenify')(require('mkdirp'))
 
-const config = require('./vm.json')
+const config = require(`./${process.argv[2]}`)
 
 const execStatus = (cmd, opts) => {
 	return new Promise((resolve, reject) => {

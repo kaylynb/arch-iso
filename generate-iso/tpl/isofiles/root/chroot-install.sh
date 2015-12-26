@@ -44,21 +44,29 @@ EOF
 mkinitcpio -p linux
 
 mkdir -p /boot/loader/entries
-cat << EOF > /boot/loader/entries/arch.conf
+cat << EOF > /boot/loader/entries/arch-{{ hostname }}.conf
 title	Arch Linux
 linux	/vmlinuz-linux
 initrd	/initramfs-linux.img
 options	cryptdevice=/dev/disk/by-uuid/$1:main:allow-discards root=/dev/mapper/main-root rw
 EOF
 
-echo "default arch" > /boot/loader/loader.conf
+if [ ! -f /boot/loader/loader.conf ]; then
+	echo "default arch-{{ hostname }}" > /boot/loader/loader.conf
+fi
 
 bootctl install
 
-passwd
+until passwd
+do sleep 1; done
 
 useradd -m -g users -G wheel -s /bin/bash kaylyn
-passwd kaylyn
+
+until passwd kaylyn
+do sleep 1; done
 
 echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
 chmod 0440 /etc/sudoers.d/wheel
+
+cd /home/kaylyn
+git clone https://github.com/kaylynb/arch-config.git

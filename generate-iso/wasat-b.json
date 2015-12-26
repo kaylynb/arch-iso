@@ -1,0 +1,58 @@
+{
+	"hostname": "wasatb",
+	"localtime": "America/Los_Angeles",
+	"parted": {
+		"disk": "/dev/sdc",
+		"commands": [
+			"mklabel gpt",
+			"mkpart ESP fat32 1MiB 513MiB",
+			"set 1 boot on",
+			"mkpart primary ext4 513MiB 100%"
+		]
+	},
+	"fs": {
+		"boot": {
+			"format": true,
+			"disk": "/dev/sdc1"
+		},
+		"system": {
+			"disk": "/dev/sdc2"
+		}
+	},
+	"packages": {
+		"iso": {
+			"aur": [
+				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
+			],
+			"dependencies": [
+				"abs"
+			],
+			"packages": [
+				"aura-bin"
+			]
+		},
+		"system": {
+			"aur": [
+				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
+			],
+			"packages": [
+				"abs"
+			]
+		}
+	},
+	"mkinitcpio": {
+		"hooks": [
+			"base",
+			"udev",
+			"autodetect",
+			"modconf",
+			"block",
+			"keymap",
+			"keyboard",
+			"encrypt",
+			"lvm2",
+			"filesystems",
+			"fsck"
+		]
+	}
+}
