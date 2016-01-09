@@ -41,4 +41,4 @@ echo "{{ packages.iso.packages | join("\n") }}" >> packages.x86_64
 sed -i 's@curl -o ${work_dir}/${arch}/airootfs/etc/pacman.d/mirrorlist@#@' build.sh
 sed -i 's/lynx -dump -nolist/#/' build.sh
 
-./build.sh -v
+./build.sh -v -N archlinux-{{ hostname }}

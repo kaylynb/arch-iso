@@ -1,8 +1,8 @@
 {
-	"hostname": "wasatb",
+	"hostname": "rho",
 	"localtime": "America/Los_Angeles",
 	"parted": {
-		"disk": "/dev/sdc",
+		"disk": "/dev/sdd",
 		"commands": [
 			"mklabel gpt",
 			"mkpart ESP fat32 1MiB 513MiB",
@@ -13,10 +13,10 @@
 	"fs": {
 		"boot": {
 			"format": true,
-			"disk": "/dev/sdc1"
+			"disk": "/dev/sdd1"
 		},
 		"system": {
-			"disk": "/dev/sdc2"
+			"disk": "/dev/sdd2"
 		}
 	},
 	"packages": {

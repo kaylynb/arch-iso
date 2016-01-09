@@ -9,21 +9,20 @@ const mkdirp = require('thenify')(require('mkdirp'))
 
 const config = require(`./${process.argv[2]}`)
 
-const execStatus = (cmd, opts) => {
+const child_process = require('child_process')
+
+const exec = (cmd, opts) => {
 	return new Promise((resolve, reject) => {
-		shelljs.exec(cmd, opts, (code, output) => {
-			resolve({ code, output })
+		const emitter = child_process.exec(cmd, opts, (err, stdout) => {
+			if (err) {
+				reject()
+			} else {
+				resolve(stdout.trim())
+			}
 		})
+
+		emitter.stdout.pipe(process.stdout)
 	})
-}
-
-const exec = function * (cmd, opts) {
-	const result = yield execStatus(cmd, opts)
-
-	if (result.code !== 0)
-		throw `Code: ${result.code}\nOutput: ${result.output}`
-
-	return result.output.trim()
 }
 
 nunjucks.configure({
@@ -58,10 +57,16 @@ co(function * () {
 		yield renderTpl('isofiles/root/chroot-install.sh')
 		yield renderTpl('Dockerfile')
 		yield renderTpl('isofiles/etc/vconsole.conf')
+
+		const buildName = `archlinux-isobuild-${Date.now()}`
+
+		yield exec(`docker build -t ${buildName} ${buildDirectory}`)
+		yield exec(`docker run --privileged --rm -v ${path.resolve(__dirname, '../iso/')}:/archiso/out/ ${buildName} /bin/bash usr/sbin/build-iso.sh`)
+		yield exec(`docker rmi ${buildName}`)
 	} finally {
 		if (buildDirectory) {
-			// console.log(`Removing build directory [${buildDirectory}]`)
-			// shelljs.rm('-rf', buildDirectory)
+			console.log(`Removing build directory [${buildDirectory}]`)
+			shelljs.rm('-rf', buildDirectory)
 		}
 	}
 }).catch(err => {
