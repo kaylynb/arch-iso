@@ -1,0 +1,49 @@
+{
+	"hostname": "wasat",
+	"localtime": "America/Los_Angeles",
+	"fs": {
+		"boot": {
+			"format": false,
+			"disk": "/dev/sda1"
+		},
+		"system": {
+			"disk": "/dev/sda4"
+		}
+	},
+	"packages": {
+		"iso": {
+			"aur": [
+				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
+			],
+			"dependencies": [
+				"abs"
+			],
+			"packages": [
+				"aura-bin"
+			]
+		},
+		"system": {
+			"aur": [
+				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
+			],
+			"packages": [
+				"abs"
+			]
+		}
+	},
+	"mkinitcpio": {
+		"hooks": [
+			"base",
+			"udev",
+			"autodetect",
+			"modconf",
+			"block",
+			"keymap",
+			"keyboard",
+			"encrypt",
+			"lvm2",
+			"filesystems",
+			"fsck"
+		]
+	}
+}

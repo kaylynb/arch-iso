@@ -2,7 +2,9 @@
 
 set -e
 
+{% if parted %}
 echo "{{ parted.commands | join ("\n") }}" | parted {{ parted.disk }}
+{% endif %}
 
 until cryptsetup -v --cipher aes-xts-plain64 --key-size 512 -y luksFormat {{ fs.system.disk }}
 do sleep 1; done
