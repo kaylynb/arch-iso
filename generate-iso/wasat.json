@@ -19,7 +19,8 @@
 				"abs"
 			],
 			"packages": [
-				"aura-bin"
+				"aura-bin",
+				"terminus-font"
 			]
 		},
 		"system": {
@@ -27,7 +28,8 @@
 				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
 			],
 			"packages": [
-				"abs"
+				"abs",
+				"terminus-font"
 			]
 		}
 	},
@@ -38,6 +40,7 @@
 			"autodetect",
 			"modconf",
 			"block",
+			"consolefont",
 			"keymap",
 			"keyboard",
 			"encrypt",
@@ -45,5 +48,6 @@
 			"filesystems",
 			"fsck"
 		]
-	}
+	},
+	"consolefont": "ter-v28n"
 }
