@@ -5,8 +5,6 @@ set -e
 sed -i 's/#Color/Color/' /etc/pacman.conf
 
 dirmngr < /dev/null
-pacman-key -r 962DDE58
-pacman-key --lsign-key 962DDE58
 
 {% for package in packages.system.aur %}
 echo 'Building {{package}}'
@@ -30,7 +28,7 @@ export LANG=en_US.UTF-8
 echo KEYMAP=colemak > /etc/vconsole.conf
 {% if consolefont %}echo "FONT={{ consolefont }}" >> /etc/vconsole.conf{% endif %}
 
-ln -s /usr/share/zoneinfo/{{ localtime }} /etc/localtime
+ln -sf /usr/share/zoneinfo/{{ localtime }} /etc/localtime
 hwclock --systohc --utc
 
 echo {{ hostname }} > /etc/hostname
