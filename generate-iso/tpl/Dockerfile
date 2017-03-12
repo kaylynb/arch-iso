@@ -1,11 +1,14 @@
-FROM archlinux
+FROM base/archlinux
 
 COPY isofiles/etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist
 
 RUN pacman -Sy --noconfirm archlinux-keyring && \
 	pacman -Syyu --noconfirm && \
 	pacman-db-upgrade && \
-	pacman -S --noconfirm git base-devel ca-certificates-mozilla archiso {{ packages.iso.dependencies | join(" ")}} && \
+	pacman -S --noconfirm ca-certificates-mozilla && \
+	pacman -Rs --noconfirm lzo2; \
+	pacman -S --noconfirm lzo && \
+	pacman -S --noconfirm git base-devel archiso {{ packages.iso.dependencies | join(" ")}} && \
 	rm /var/cache/pacman/pkg/*
 
 COPY build-iso.sh /usr/bin/

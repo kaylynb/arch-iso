@@ -60,7 +60,7 @@ co(function * () {
 
 		const buildName = `archlinux-isobuild-${Date.now()}`
 
-		yield exec(`docker build -t ${buildName} ${buildDirectory}`)
+		yield exec(`docker build --no-cache -t ${buildName} ${buildDirectory}`)
 		yield exec(`docker run --privileged --rm -v ${path.resolve(__dirname, '../iso/')}:/archiso/out/ ${buildName} /bin/bash usr/sbin/build-iso.sh`)
 		yield exec(`docker rmi ${buildName}`)
 	} finally {
