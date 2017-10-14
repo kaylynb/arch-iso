@@ -26,7 +26,7 @@ mount /dev/mapper/main-root /mnt
 mkdir /mnt/boot
 mount {{ fs.boot.disk }} /mnt/boot
 
-pacstrap /mnt base base-devel git sudo linux-headers {{ packages.system.packages | join(" ") }}
+pacstrap /mnt base base-devel git sudo linux-headers intel-ucode {{ packages.system.packages | join(" ") }}
 
 genfstab -U -p /mnt > /mnt/etc/fstab
 

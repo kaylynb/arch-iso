@@ -55,8 +55,16 @@ initrd	/initramfs-linux.img
 options	cryptdevice=/dev/disk/by-uuid/$1:main:allow-discards root=/dev/mapper/main-root rw
 EOF
 
+cat << EOF > /boot/loader/entries/arch-{{ hostname }}-ucode.conf
+title	Arch Linux
+linux	/vmlinuz-linux
+initrd	/intel-ucode.img
+initrd	/initramfs-linux.img
+options	cryptdevice=/dev/disk/by-uuid/$1:main:allow-discards root=/dev/mapper/main-root rw
+EOF
+
 if [ ! -f /boot/loader/loader.conf ]; then
-	echo "default arch-{{ hostname }}" > /boot/loader/loader.conf
+	echo "default arch-{{ hostname }}-ucode" > /boot/loader/loader.conf
 fi
 
 bootctl install
