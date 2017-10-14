@@ -24,9 +24,7 @@
 			"aur": [
 				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
 			],
-			"dependencies": [
-				"abs"
-			],
+			"dependencies": [],
 			"packages": [
 				"aura-bin"
 			]
@@ -35,9 +33,7 @@
 			"aur": [
 				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
 			],
-			"packages": [
-				"abs"
-			]
+			"packages": []
 		}
 	},
 	"mkinitcpio": {

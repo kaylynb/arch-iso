@@ -15,9 +15,7 @@
 			"aur": [
 				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
 			],
-			"dependencies": [
-				"abs"
-			],
+			"dependencies": [],
 			"packages": [
 				"aura-bin",
 				"terminus-font"
@@ -27,10 +25,7 @@
 			"aur": [
 				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
 			],
-			"packages": [
-				"abs",
-				"terminus-font"
-			]
+			"packages": ["terminus-font"]
 		}
 	},
 	"mkinitcpio": {
