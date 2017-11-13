@@ -7,7 +7,7 @@
 			"disk": "/dev/sda1"
 		},
 		"system": {
-			"disk": "/dev/sda4"
+			"disk": "/dev/sda3"
 		}
 	},
 	"packages": {
