@@ -37,12 +37,12 @@ echo "127.0.0.1	localhost.localdomain	localhost	{{ hostname }}
 ::1	localhost.localdomain	localhost	{{ hostname }}" > /etc/hosts
 
 cat << EOF > /etc/mkinitcpio.conf
-MODULES=""
-BINARIES=""
-FILES=""
-HOOKS="{{ mkinitcpio.hooks | join(" ") }}"
-COMPRESSION="lz4"
-COMPRESSION_OPTIONS=""
+MODULES=()
+BINARIES=()
+FILES=()
+HOOKS=({{ mkinitcpio.hooks | join(" ") }})
+COMPRESSION=(lz4)
+COMPRESSION_OPTIONS=()
 EOF
 
 mkinitcpio -p linux
