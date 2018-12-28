@@ -21,12 +21,8 @@
 	},
 	"packages": {
 		"iso": {
-			"aur": [
-				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
-			],
 			"dependencies": [],
 			"packages": [
-				"aura-bin",
 				"terminus-font"
 			]
 		},

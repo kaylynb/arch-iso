@@ -1,13 +1,9 @@
-FROM base/archlinux
+FROM greyltc/archlinux:latest
 
 COPY isofiles/etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist
 
 RUN pacman -Sy --noconfirm archlinux-keyring && \
-	# pacman -Syyu --noconfirm && \
-	# pacman-db-upgrade && \
 	pacman -S --noconfirm ca-certificates-mozilla && \
-	# pacman -Rs --noconfirm lzo2; \
-	# pacman -S --noconfirm lzo && \
 	pacman -S --noconfirm git base-devel archiso {{ packages.iso.dependencies | join(" ")}} && \
 	rm /var/cache/pacman/pkg/*
 

@@ -14,7 +14,9 @@ do sleep 1; done
 
 pvcreate /dev/mapper/lvm
 vgcreate main /dev/mapper/lvm
+lvcreate -L 12G -n free main
 lvcreate -l +100%FREE -n root main
+lvremove -f main/free
 mkfs.ext4 /dev/mapper/main-root
 
 {% if fs.boot.format %}
