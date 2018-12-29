@@ -25,9 +25,7 @@
 			"packages": []
 		},
 		"system": {
-			"aur": [
-				"https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
-			],
+			"aur": [],
 			"packages": []
 		}
 	},

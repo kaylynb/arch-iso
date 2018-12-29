@@ -10,7 +10,7 @@ dirmngr < /dev/null
 echo 'Building {{package}}'
 mkdir build
 cd build
-curl -L {{ package }} | tar --strip-components=1 -xz
+git clone {{ package }} .
 chmod -R 777 .
 sudo -u nobody makepkg
 pacman --noconfirm -U `ls *pkg.tar.xz`
