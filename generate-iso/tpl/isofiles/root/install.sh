@@ -3,6 +3,7 @@
 set -e
 
 {% if parted %}
+wipefs --all {{ parted.disk }}
 echo "{{ parted.commands | join ("\n") }}" | parted {{ parted.disk }}
 {% endif %}
 
