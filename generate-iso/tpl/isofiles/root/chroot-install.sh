@@ -40,7 +40,7 @@ cat << EOF > /etc/mkinitcpio.conf
 MODULES=()
 BINARIES=()
 FILES=()
-HOOKS=({{ mkinitcpio.hooks | join(" ") }})
+HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole sd-encrypt sd-lvm2 filesystems fsck)
 COMPRESSION=(lz4)
 COMPRESSION_OPTIONS=()
 EOF
@@ -48,23 +48,17 @@ EOF
 mkinitcpio -p linux
 
 mkdir -p /boot/loader/entries
-cat << EOF > /boot/loader/entries/arch-{{ hostname }}.conf
-title	Arch Linux
-linux	/vmlinuz-linux
-initrd	/initramfs-linux.img
-options	cryptdevice=/dev/disk/by-uuid/$1:main:allow-discards root=/dev/mapper/main-root rw
-EOF
 
-cat << EOF > /boot/loader/entries/arch-{{ hostname }}-ucode.conf
+cat << EOF > /boot/loader/entries/arch-{{ hostname }}.conf
 title	Arch Linux
 linux	/vmlinuz-linux
 initrd	/intel-ucode.img
 initrd	/initramfs-linux.img
-options	cryptdevice=/dev/disk/by-uuid/$1:main:allow-discards root=/dev/mapper/main-root rw
+options rw root=/dev/mapper/main-root rd.luks.name=$1=main rd.luks.options=discard
 EOF
 
 if [ ! -f /boot/loader/loader.conf ]; then
-	echo "default arch-{{ hostname }}-ucode" > /boot/loader/loader.conf
+	echo "default arch-{{ hostname }}" > /boot/loader/loader.conf
 fi
 
 bootctl install

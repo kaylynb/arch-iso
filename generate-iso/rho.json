@@ -28,20 +28,5 @@
 			"aur": [],
 			"packages": []
 		}
-	},
-	"mkinitcpio": {
-		"hooks": [
-			"base",
-			"udev",
-			"autodetect",
-			"modconf",
-			"block",
-			"keymap",
-			"keyboard",
-			"encrypt",
-			"lvm2",
-			"filesystems",
-			"fsck"
-		]
 	}
 }

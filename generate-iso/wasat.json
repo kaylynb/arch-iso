@@ -24,21 +24,5 @@
 			]
 		}
 	},
-	"mkinitcpio": {
-		"hooks": [
-			"base",
-			"udev",
-			"autodetect",
-			"modconf",
-			"block",
-			"consolefont",
-			"keymap",
-			"keyboard",
-			"encrypt",
-			"lvm2",
-			"filesystems",
-			"fsck"
-		]
-	},
 	"consolefont": "ter-v28n"
 }
