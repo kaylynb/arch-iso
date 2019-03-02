@@ -24,5 +24,6 @@
 			]
 		}
 	},
-	"consolefont": "ter-v28n"
+	"consolefont": "ter-v28n",
+	"keymap": "colemak"
 }

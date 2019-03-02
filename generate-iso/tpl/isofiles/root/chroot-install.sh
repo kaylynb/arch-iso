@@ -25,7 +25,7 @@ locale-gen
 echo LANG=en_US.UTF-8 > /etc/locale.conf
 export LANG=en_US.UTF-8
 
-echo KEYMAP=colemak > /etc/vconsole.conf
+{% if keymap %}echo "KEYMAP={{ keymap }}" > /etc/vconsole.conf{% endif %}
 {% if consolefont %}echo "FONT={{ consolefont }}" >> /etc/vconsole.conf{% endif %}
 
 ln -sf /usr/share/zoneinfo/{{ localtime }} /etc/localtime
