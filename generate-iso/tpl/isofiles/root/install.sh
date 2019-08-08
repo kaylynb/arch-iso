@@ -2,6 +2,8 @@
 
 set -e
 
+timedatectl set-ntp true
+
 {% if parted %}
 wipefs --all {{ parted.disk }}
 echo "{{ parted.commands | join ("\n") }}" | parted {{ parted.disk }}
