@@ -34,8 +34,8 @@ hwclock --systohc --utc
 
 echo {{ hostname }} > /etc/hostname
 
-echo "127.0.0.1	localhost.localdomain	localhost	{{ hostname }}
-::1	localhost.localdomain	localhost	{{ hostname }}" > /etc/hosts
+echo "127.0.0.1	{{ hostname }}
+::1	{{ hostname }}" > /etc/hosts
 
 cat << EOF > /etc/mkinitcpio.conf
 MODULES=()
