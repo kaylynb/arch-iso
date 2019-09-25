@@ -9,7 +9,8 @@ wipefs --all {{ parted.disk }}
 echo "{{ parted.commands | join ("\n") }}" | parted {{ parted.disk }}
 {% endif %}
 
-until cryptsetup -v --cipher aes-xts-plain64 --key-size 512 -y luksFormat {{ fs.system.disk }}
+{% if fs.system.encrypted %}
+until cryptsetup -v --use-random --cipher aes-xts-plain64 --key-size 512 -y luksFormat {{ fs.system.disk }}
 do sleep 1; done
 
 until cryptsetup open --type luks {{ fs.system.disk }} lvm
@@ -17,6 +18,11 @@ do sleep 1; done
 
 pvcreate /dev/mapper/lvm
 vgcreate main /dev/mapper/lvm
+{% else %}
+pvcreate {{ fs.system.disk }}
+vgcreate main {{ fs.system.disk }}
+{% endif %}
+
 lvcreate -L 12G -n free main
 lvcreate -l +100%FREE -n root main
 lvremove -f main/free

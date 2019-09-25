@@ -1,6 +1,7 @@
 {
 	"hostname": "vm",
 	"localtime": "America/Los_Angeles",
+	"sshd": true,
 	"parted": {
 		"disk": "/dev/sda",
 		"commands": [
@@ -23,15 +24,12 @@
 		"iso": {
 			"dependencies": [],
 			"packages": [
-				"terminus-font"
 			]
 		},
 		"system": {
 			"aur": [],
 			"packages": [
-				"terminus-font"
 			]
 		}
-	},
-	"consolefont": "ter-v28n"
+	}
 }

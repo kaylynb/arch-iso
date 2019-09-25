@@ -2,7 +2,7 @@
 	"hostname": "rho",
 	"localtime": "America/Los_Angeles",
 	"parted": {
-		"disk": "/dev/sdd",
+		"disk": "/dev/sdb",
 		"commands": [
 			"mklabel gpt",
 			"mkpart ESP fat32 1MiB 513MiB",
@@ -13,10 +13,11 @@
 	"fs": {
 		"boot": {
 			"format": true,
-			"disk": "/dev/sdd1"
+			"disk": "/dev/sdb1"
 		},
 		"system": {
-			"disk": "/dev/sdd2"
+			"encrypted": true,
+			"disk": "/dev/sdb2"
 		}
 	},
 	"packages": {
