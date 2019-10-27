@@ -23,4 +23,7 @@ sed -i '/INCLUDE/d' syslinux/archiso_sys.cfg
 sed -i '1iDEFAULT select\nPROMPT 0\nTIMEOUT 50\nDEFAULT arch64' syslinux/archiso_sys.cfg
 {% endif %}
 
+echo 'systemctl enable systemd-networkd' >> airootfs/root/customize_airootfs.sh
+echo 'systemctl enable systemd-resolved' >> airootfs/root/customize_airootfs.sh
+
 ./build.sh -v -N archlinux-{{ hostname }}

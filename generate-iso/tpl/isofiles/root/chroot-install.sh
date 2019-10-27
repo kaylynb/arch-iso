@@ -2,8 +2,6 @@
 
 set -e
 
-sed -i 's/#Color/Color/' /etc/pacman.conf
-
 dirmngr < /dev/null
 
 {% for package in packages.system.aur %}
@@ -41,7 +39,7 @@ cat << EOF > /etc/mkinitcpio.conf
 MODULES=()
 BINARIES=()
 FILES=()
-HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole sd-encrypt sd-lvm2 filesystems fsck)
+HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole {% if fs.system.encrypted %} sd-encrypt {% endif %} sd-lvm2 filesystems fsck)
 COMPRESSION=(lz4)
 COMPRESSION_OPTIONS=()
 EOF
@@ -55,7 +53,11 @@ title	Arch Linux
 linux	/vmlinuz-linux
 initrd	/intel-ucode.img
 initrd	/initramfs-linux.img
+{% if fs.system.encrypted %}
 options rw root=/dev/mapper/main-root rd.luks.name=$1=main rd.luks.options=discard
+{% else %}
+options rw root=/dev/mapper/main-root
+{% endif %}
 EOF
 
 if [ ! -f /boot/loader/loader.conf ]; then
@@ -63,6 +65,20 @@ if [ ! -f /boot/loader/loader.conf ]; then
 fi
 
 bootctl install
+
+{% if network_wired %}
+cat << EOF > /etc/systemd/network/20-wired.network
+[Match]
+Name={{ network_wired }}
+
+[Network]
+DHCP=ipv4
+
+[DHCP]
+RouteMetric=10
+UseDomains=true
+EOF
+{% endif %}
 
 until passwd
 do sleep 1; done
