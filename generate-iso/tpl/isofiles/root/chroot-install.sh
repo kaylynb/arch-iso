@@ -83,7 +83,7 @@ EOF
 until passwd
 do sleep 1; done
 
-useradd -m -g users -G wheel -s /bin/bash kaylyn
+useradd -m -G wheel -s /bin/bash kaylyn
 
 until passwd kaylyn
 do sleep 1; done

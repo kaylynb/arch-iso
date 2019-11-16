@@ -13,7 +13,7 @@
 	},
 	"lvcreate": [
 		"lvcreate -L 12G -n free main",
-		"lvcreate -l +60%FREE -n cryptroot main",
+		"lvcreate -l +50%FREE -n cryptroot main",
 		"lvcreate -l +100%FREE -n cryptcipher main",
 		"lvremove -f main/free"
 	],
