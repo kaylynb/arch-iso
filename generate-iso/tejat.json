@@ -1,0 +1,42 @@
+{
+	"hostname": "tejat",
+	"localtime": "America/Los_Angeles",
+	"sshd": true,
+	"parted": {
+		"disk": "/dev/nvme0n1",
+		"commands": [
+			"mklabel gpt",
+			"mkpart ESP fat32 1MiB 513MiB",
+			"set 1 boot on",
+			"mkpart primary ext4 513MiB 100%"
+		]
+	},
+	"lvcreate": [
+		"lvcreate -L 12G -n free main",
+		"lvcreate -l +50%FREE -n cryptroot main",
+		"lvcreate -l +100%FREE -n cryptcipher main",
+		"lvremove -f main/free"
+	],
+	"network_wired": "eno1",
+	"fs": {
+		"boot": {
+			"format": true,
+			"disk": "/dev/nvme0n1p1"
+		},
+		"system": {
+			"disk": "/dev/nvme0n1p2"
+		}
+	},
+	"packages": {
+		"iso": {
+			"dependencies": [],
+			"packages": [
+			]
+		},
+		"system": {
+			"aur": [],
+			"packages": [
+			]
+		}
+	}
+}

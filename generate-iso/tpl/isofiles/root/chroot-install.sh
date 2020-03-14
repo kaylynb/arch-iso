@@ -76,7 +76,7 @@ DHCP=ipv4
 
 [DHCP]
 RouteMetric=10
-UseDomains=true
+UseDomains=yes
 EOF
 {% endif %}
 
