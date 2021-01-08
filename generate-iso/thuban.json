@@ -1,33 +1,35 @@
 {
-	"hostname": "rho",
+	"hostname": "thuban",
 	"localtime": "America/Los_Angeles",
+	"sshd": true,
 	"parted": {
-		"disk": "/dev/sdb",
+		"disk": "/dev/sda",
 		"commands": [
 			"mklabel gpt",
 			"mkpart ESP fat32 1MiB 513MiB",
 			"set 1 boot on",
-			"mkpart Arch ext4 513MiB 100%"
+			"mkpart primary ext4 513MiB 100%"
 		]
 	},
 	"fs": {
 		"boot": {
 			"format": true,
-			"disk": "/dev/sdb1"
+			"disk": "/dev/sda1"
 		},
 		"system": {
-			"encrypted": true,
-			"disk": "/dev/sdb2"
+			"disk": "/dev/sda2"
 		}
 	},
 	"packages": {
 		"iso": {
 			"dependencies": [],
-			"packages": []
+			"packages": [
+			]
 		},
 		"system": {
 			"aur": [],
-			"packages": []
+			"packages": [
+			]
 		}
 	}
 }

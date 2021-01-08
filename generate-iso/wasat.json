@@ -4,24 +4,26 @@
 	"fs": {
 		"boot": {
 			"format": false,
-			"disk": "/dev/sda1"
+			"disk": "/dev/nvme0n1p1"
 		},
 		"system": {
 			"encrypted": true,
-			"disk": "/dev/sda3"
+			"disk": "/dev/nvme0n1p3"
 		}
 	},
 	"packages": {
 		"iso": {
 			"dependencies": [],
 			"packages": [
-				"terminus-font"
+				"terminus-font",
+				"broadcom-wl-dkms"
 			]
 		},
 		"system": {
 			"aur": [],
 			"packages": [
-				"terminus-font"
+				"terminus-font",
+				"broadcom-wl-dkms"
 			]
 		}
 	},

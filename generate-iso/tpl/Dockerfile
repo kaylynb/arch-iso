@@ -1,4 +1,4 @@
-FROM archlinux/base
+FROM archlinux
 
 COPY isofiles/etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist
 
