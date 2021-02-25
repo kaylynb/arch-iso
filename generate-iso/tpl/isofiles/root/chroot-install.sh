@@ -39,8 +39,8 @@ cat << EOF > /etc/mkinitcpio.conf
 MODULES=()
 BINARIES=()
 FILES=()
-HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole {% if fs.system.encrypted %} sd-encrypt {% endif %} sd-lvm2 filesystems fsck)
-COMPRESSION=(lz4)
+HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole {% if fs.system.encrypted %} sd-encrypt {% endif %} lvm2 filesystems fsck)
+COMPRESSION=(zstd)
 COMPRESSION_OPTIONS=()
 EOF
 
