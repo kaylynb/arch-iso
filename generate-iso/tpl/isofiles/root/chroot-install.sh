@@ -16,8 +16,6 @@ cd ../
 rm -rf build
 {% endfor %}
 
-sed -i -e $'/\tissue_discards = 0/ s/= 0/= 1/' /etc/lvm/lvm.conf
-
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 echo LANG=en_US.UTF-8 > /etc/locale.conf
@@ -35,36 +33,29 @@ echo {{ hostname }} > /etc/hostname
 echo "127.0.0.1	{{ hostname }}
 ::1	{{ hostname }}" > /etc/hosts
 
-cat << EOF > /etc/mkinitcpio.conf
-MODULES=()
-BINARIES=()
-FILES=()
-HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole {% if fs.system.encrypted %} sd-encrypt {% endif %} lvm2 filesystems fsck)
-COMPRESSION=(zstd)
-COMPRESSION_OPTIONS=()
-EOF
+sed -i "s/HOOKS=.*/HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole sd-encrypt btrfs filesystems)/g" /etc/mkinitcpio.conf
 
-mkinitcpio -p linux
+mkinitcpio -P
 
 mkdir -p /boot/loader/entries
 
-cat << EOF > /boot/loader/entries/arch-{{ hostname }}.conf
-title	Arch Linux
-linux	/vmlinuz-linux
-initrd	/intel-ucode.img
-initrd	/initramfs-linux.img
-{% if fs.system.encrypted %}
-options rw root=/dev/mapper/main-root rd.luks.name=$1=main rd.luks.options=discard
-{% else %}
-options rw root=/dev/mapper/main-root
-{% endif %}
+bootctl install
+
+cat << EOF > /boot/loader/loader.conf
+default arch.conf
 EOF
 
-if [ ! -f /boot/loader/loader.conf ]; then
-	echo "default arch-{{ hostname }}" > /boot/loader/loader.conf
-fi
+LUKS_UUID=`cryptsetup luksUUID $1`
+KERNEL_TYPE="$2"
+ROOT_UUID="$3"
 
-bootctl install
+cat << EOF > /boot/loader/entries/arch.conf
+title	Arch Linux
+linux	/vmlinuz-$KERNEL_TYPE
+initrd	/intel-ucode.img
+initrd	/initramfs-$KERNEL_TYPE.img
+options rw root=/dev/mapper/root rd.luks.name=$LUKS_UUID=root
+EOF
 
 {% if network_wired %}
 cat << EOF > /etc/systemd/network/20-wired.network
@@ -78,12 +69,41 @@ DHCP=ipv4
 RouteMetric=10
 UseDomains=yes
 EOF
+
+systemctl enable systemd-networkd
 {% endif %}
+
+systemctl enable systemd-resolved
 
 until passwd
 do sleep 1; done
 
-useradd -m -G wheel -s /bin/bash kaylyn
+# Setup snapper
+umount /.snapshots
+rm -r /.snapshots
+snapper --no-dbus -c root create-config /
+btrfs subvolume delete /.snapshots
+mkdir /.snapshots
+chmod 750 /.snapshots
+mount UUID="$ROOT_UUID" -o subvol=@/.snapshots /.snapshots
+
+# Setup user and snapper
+btrfs subvolume create /home/kaylyn
+btrfs subvolume create /home/kaylyn/.cache
+chattr +C /home/kaylyn/.cache
+
+snapper --no-dbus -c home_kaylyn create-config /home/kaylyn
+mkdir -p /home/kaylyn/.snapshots
+mkdir -p /home/kaylyn/.cache
+mount UUID="$ROOT_UUID" -o subvol=@/home/kaylyn/.snapshots /home/kaylyn/.snapshots
+mount UUID="$ROOT_UUID" -o subvol=@/home/kaylyn/.cache /home/kaylyn/.cache
+
+snapper --no-dbus -c home_kaylyn create --read-write --description "Filesytem Creation"
+mount UUID="$ROOT_UUID" -o subvol=@/home/kaylyn/.snapshots/1/snapshot /home/kaylyn
+
+useradd -M -G wheel -s /bin/bash kaylyn
+chown kaylyn:kaylyn /home/kaylyn
+chown kaylyn:kaylyn /home/kaylyn/.cache
 
 until passwd kaylyn
 do sleep 1; done

@@ -11,51 +11,96 @@ echo "{{ parted.commands | join ("\n") }}" | parted {{ parted.disk }}
 
 sleep 2
 
-{% if fs.system.encrypted %}
-until cryptsetup -v --use-random --cipher aes-xts-plain64 --key-size 512 -y luksFormat {{ fs.system.disk }}
-do sleep 1; done
+DISK_BOOT="{{ fs.boot.disk }}"
+DISK_SYSTEM="{{ fs.system.disk }}"
+SYSTEM_HOSTNAME="{{ hostname }}"
 
-until cryptsetup open --type luks {{ fs.system.disk }} lvm
-do sleep 1; done
-
-pvcreate /dev/mapper/lvm
-sleep 2
-vgcreate main /dev/mapper/lvm
-sleep 2
-
-{% else %}
-pvcreate {{ fs.system.disk }}
-sleep 2
-vgcreate main {{ fs.system.disk }}
-sleep 2
-{% endif %}
-
-{% if lvcreate %}
-{{ lvcreate | join ("\n") }}
-{% else %}
-
-lvcreate -L 12G -n free main
-lvcreate -l +100%FREE -n root main
-lvremove -f main/free
-
-{% endif %}
-
-mkfs.ext4 /dev/mapper/main-root
 {% if fs.boot.format %}
-	mkfs.fat -F32 {{ fs.boot.disk }}
+	mkfs.fat -F32 $DISK_BOOT
 {% endif %}
 
-mount /dev/mapper/main-root /mnt
+# Setup crypt device
+until cryptsetup -v -y luksFormat "$DISK_SYSTEM"
+do sleep 1; done
 
-mkdir /mnt/boot
-mount {{ fs.boot.disk }} /mnt/boot
+until cryptsetup open --persistent --allow-discards --type luks "$DISK_SYSTEM" root
+do sleep 1; done
 
-pacstrap /mnt base base-devel git sudo linux linux-headers linux-firmware intel-ucode man-db man-pages texinfo lvm2 neovim {{ packages.system.packages | join(" ") }}
+# Setup btrfs
+mkfs.btrfs -L "$SYSTEM_HOSTNAME" /dev/mapper/root
 
-genfstab -U -p /mnt > /mnt/etc/fstab
+ROOT_UUID=`lsblk -o UUID /dev/mapper/root | tail -1`
+mount UUID="$ROOT_UUID" /mnt
+
+btrfs subvolume create /mnt/@
+for i in {opt,srv,swap,root,home}; do
+	btrfs subvolume create /mnt/@/$i
+done
+
+mkdir -p /mnt/@/usr
+btrfs subvolume create /mnt/@/usr/local
+
+mkdir -p /mnt/@/var
+for i in {abs,cache,log,spool,tmp}; do
+	btrfs subvolume create /mnt/@/var/$i
+	chattr +C /mnt/@/var/$i
+done
+
+# Setup snapshots
+btrfs subvolume create /mnt/@/.snapshots
+mkdir -p /mnt/@/.snapshots/1
+btrfs subvolume create /mnt/@/.snapshots/1/snapshot
+
+SNAPSHOT_DATE=`date +"%Y-%m-%d %H:%M:%S"`
+cat << EOF > /mnt/@/.snapshots/1/info.xml
+<?xml version="1.0"?>
+<snapshot>
+	<type>single</type>
+	<num>1</num>
+	<date>${SNAPSHOT_DATE}</date>
+	<description>Root Filesytem Creation</description>
+</snapshot>
+EOF
+
+SNAPSHOT_BTRFS_ID=`btrfs subvolume list /mnt | grep '@/.snapshots/1/snapshot' | awk '{print \$2}'`
+btrfs subvolume set-default "$SNAPSHOT_BTRFS_ID" /mnt
+
+# Remount snapshot
+umount /mnt
+mount UUID="$ROOT_UUID" -o compress=zstd,autodefrag /mnt
+
+for i in {opt,srv,swap,root,home}; do
+	mkdir -p /mnt/$i
+	mount UUID="$ROOT_UUID" -o subvol=@/$i /mnt/$i
+done
+
+mkdir -p /mnt/usr/local
+mount UUID="$ROOT_UUID" -o subvol=@/usr/local /mnt/usr/local
+
+mkdir -p /mnt/var
+for i in {abs,cache,log,spool,tmp}; do
+	mkdir -p /mnt/var/$i
+	mount UUID="$ROOT_UUID" -o subvol=@/var/$i /mnt/var/$i
+done
+
+mkdir -p /mnt/.snapshots
+mount UUID="$ROOT_UUID" -o subvol=@/.snapshots /mnt/.snapshots
+
+mkdir -p /mnt/boot
+mount "$DISK_BOOT" /mnt/boot
+
+{% if kernel %}
+KERNEL_TYPE={{ kernel }}
+{% else %}
+KERNEL_TYPE=linux
+{% endif %}
+
+pacstrap /mnt base base-devel git sudo "$KERNEL_TYPE" "${KERNEL_TYPE}-headers" linux-firmware intel-ucode btrfs-progs efibootmgr snapper man-db man-pages texinfo neovim ansible {{ packages.system.packages | join(" ") }}
 
 cp ~/chroot-install.sh /mnt/
 
-arch-chroot /mnt /bin/bash -vx /chroot-install.sh `lsblk -no UUID {{ fs.system.disk }} | head -1`
+arch-chroot /mnt /bin/bash -vx /chroot-install.sh $DISK_SYSTEM $KERNEL_TYPE $ROOT_UUID
 
+genfstab -U /mnt > /mnt/etc/fstab
+sed -i "s^,subvolid=$SNAPSHOT_BTRFS_ID,subvol=/@/.snapshots/1/snapshot^^g" /mnt/etc/fstab
 rm /mnt/chroot-install.sh

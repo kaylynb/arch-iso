@@ -18,11 +18,13 @@ echo "{{ packages.iso.packages | join("\n") }}" >> packages.x86_64
 
 {% if sshd %}
 sed -i 's/#\(PermitEmptyPasswords \).\+/\1yes/' airootfs/etc/ssh/sshd_config
-mkdir -p airootfs/etc/systemd/system/multi-user.target.wants
-ln -s /usr/lib/systemd/system/sshd.service airootfs/etc/systemd/system/multi-user.target.wants/
+echo 'systemctl enable sshd' >> airootfs/root/customize_airootfs.sh
 {% endif %}
 
 echo 'systemctl enable systemd-networkd' >> airootfs/root/customize_airootfs.sh
 echo 'systemctl enable systemd-resolved' >> airootfs/root/customize_airootfs.sh
+echo 'systemctl disable reflector' >> airootfs/root/customize_airootfs.sh
+
+sed -Ei 's/(iso_name=").*(")/\1archlinux-{{ hostname }}\2/' profiledef.sh
 
 mkarchiso -v /archiso

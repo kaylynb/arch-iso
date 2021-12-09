@@ -1,30 +1,26 @@
 {
 	"hostname": "wasat",
+	"network_wired": "e*",
 	"localtime": "America/Los_Angeles",
+	"kernel": "linux-zen",
 	"fs": {
 		"boot": {
 			"format": false,
-			"disk": "/dev/nvme0n1p1"
+			"disk": "/dev/nvme0n1p3"
 		},
 		"system": {
 			"encrypted": true,
-			"disk": "/dev/nvme0n1p3"
+			"disk": "/dev/nvme0n1p2"
 		}
 	},
 	"packages": {
 		"iso": {
 			"dependencies": [],
-			"packages": [
-				"terminus-font",
-				"broadcom-wl-dkms"
-			]
+			"packages": []
 		},
 		"system": {
 			"aur": [],
-			"packages": [
-				"terminus-font",
-				"broadcom-wl-dkms"
-			]
+			"packages": []
 		}
 	},
 	"keymap": "colemak"

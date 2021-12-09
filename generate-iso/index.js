@@ -10,6 +10,8 @@ const os = require('os')
 
 const config = require(`./${process.argv[2]}`)
 
+config.packages.system.aur.push('pikaur')
+
 nunjucks.configure({
 	autoescape: false,
 	throwOnUndefined: true
