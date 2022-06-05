@@ -1,0 +1,34 @@
+{
+	"hostname": "marfik",
+	"localtime": "America/Los_Angeles",
+	"sshd": true,
+	"network_wired": "e*",
+	"parted": {
+		"disk": "/dev/nvme0n1",
+		"commands": [
+			"mklabel gpt",
+			"mkpart ESP fat32 1MiB 1024MiB",
+			"set 1 boot on",
+			"mkpart Arch ext4 1024MiB 100%"
+		]
+	},
+	"fs": {
+		"boot": {
+			"format": true,
+			"disk": "/dev/nvme0n1p1"
+		},
+		"system": {
+			"disk": "/dev/nvme0n1p2"
+		}
+	},
+	"packages": {
+		"iso": {
+			"dependencies": [],
+			"packages": []
+		},
+		"system": {
+			"aur": [],
+			"packages": []
+		}
+	}
+}

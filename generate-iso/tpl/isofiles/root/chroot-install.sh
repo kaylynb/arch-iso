@@ -8,9 +8,9 @@ dirmngr < /dev/null
 echo 'Building {{package}}'
 mkdir build
 cd build
-git clone {{ package }} .
+git clone https://aur.archlinux.org/{{ package }}.git .
 chmod -R 777 .
-sudo -u nobody makepkg
+sudo -u nobody makepkg -rs	
 pacman --noconfirm -U `ls *pkg.tar.xz`
 cd ../
 rm -rf build
@@ -92,6 +92,7 @@ btrfs subvolume create /home/kaylyn
 btrfs subvolume create /home/kaylyn/.cache
 chattr +C /home/kaylyn/.cache
 
+{% if user_snapshots %}
 snapper --no-dbus -c home_kaylyn create-config /home/kaylyn
 mkdir -p /home/kaylyn/.snapshots
 mkdir -p /home/kaylyn/.cache
@@ -100,10 +101,14 @@ mount UUID="$ROOT_UUID" -o subvol=@/home/kaylyn/.cache /home/kaylyn/.cache
 
 snapper --no-dbus -c home_kaylyn create --read-write --description "Filesytem Creation"
 mount UUID="$ROOT_UUID" -o subvol=@/home/kaylyn/.snapshots/1/snapshot /home/kaylyn
+{% else %}
+mount UUID="$ROOT_UUID" -o subvol=@/home/kaylyn /home/kaylyn
+mount UUID="$ROOT_UUID" -o subvol=@/home/kaylyn/.cache /home/kaylyn/.cache
+{% endif %}
 
 useradd -M -G wheel -s /bin/bash kaylyn
-chown kaylyn:kaylyn /home/kaylyn
-chown kaylyn:kaylyn /home/kaylyn/.cache
+chown kaylyn: /home/kaylyn
+chown kaylyn: /home/kaylyn/.cache
 
 until passwd kaylyn
 do sleep 1; done

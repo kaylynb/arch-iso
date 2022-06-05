@@ -1,15 +1,16 @@
 {
-	"hostname": "wasat",
-	"network_wired": "e*",
+	"hostname": "fact",
 	"localtime": "America/Los_Angeles",
+	"network_wired": "e*",
 	"kernel": "linux-zen",
+	"user_snapshots": true,
 	"fs": {
 		"boot": {
-			"format": false,
+			"format": true,
 			"disk": "/dev/nvme0n1p1"
 		},
 		"system": {
-			"disk": "/dev/nvme0n1p3"
+			"disk": "/dev/nvme0n1p2"
 		}
 	},
 	"packages": {
@@ -21,6 +22,5 @@
 			"aur": [],
 			"packages": []
 		}
-	},
-	"keymap": "colemak"
+	}
 }

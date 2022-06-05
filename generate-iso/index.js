@@ -10,7 +10,8 @@ const os = require('os')
 
 const config = require(`./${process.argv[2]}`)
 
-config.packages.system.aur.push('pikaur')
+// TODO: Fix installing aur packages. Asks for password for user `nobody`
+// config.packages.system.aur.push('pikaur')
 
 nunjucks.configure({
 	autoescape: false,

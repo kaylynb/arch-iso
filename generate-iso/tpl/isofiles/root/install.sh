@@ -20,7 +20,7 @@ SYSTEM_HOSTNAME="{{ hostname }}"
 {% endif %}
 
 # Setup crypt device
-until cryptsetup -v -y luksFormat "$DISK_SYSTEM"
+until cryptsetup -v -y luksFormat --sector-size=4096 "$DISK_SYSTEM"
 do sleep 1; done
 
 until cryptsetup open --persistent --allow-discards --type luks "$DISK_SYSTEM" root
@@ -67,7 +67,7 @@ btrfs subvolume set-default "$SNAPSHOT_BTRFS_ID" /mnt
 
 # Remount snapshot
 umount /mnt
-mount UUID="$ROOT_UUID" -o compress=zstd,autodefrag /mnt
+mount UUID="$ROOT_UUID" -o compress=zstd,autodefrag,noatime /mnt
 
 for i in {opt,srv,swap,root,home}; do
 	mkdir -p /mnt/$i
