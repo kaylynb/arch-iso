@@ -1,24 +1,25 @@
 {
-	"hostname": "marfik",
+	"hostname": "ain",
 	"localtime": "America/Los_Angeles",
-	"sshd": true,
-	"network_wired": "e*",
+	"network_wired": "en*",
+	"kernel": "linux-zen",
+	"user_snapshots": true,
 	"parted": {
 		"disk": "/dev/nvme0n1",
 		"commands": [
 			"mklabel gpt",
-			"mkpart ESP fat32 1MiB 1024MiB",
+			"mkpart ESP fat32 1MiB 2048MiB",
 			"set 1 boot on",
-			"mkpart Arch ext4 1024MiB 100%"
+			"mkpart Arch ext4 2048MiB 100%"
 		]
 	},
-	"user_snapshots": true,
 	"fs": {
 		"boot": {
 			"format": true,
 			"disk": "/dev/nvme0n1p1"
 		},
 		"system": {
+			"encrypted": true,
 			"disk": "/dev/nvme0n1p2"
 		}
 	},

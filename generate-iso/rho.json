@@ -1,6 +1,8 @@
 {
 	"hostname": "rho",
 	"localtime": "America/Los_Angeles",
+	"network_wired": true,
+	"user_snapshots": true,
 	"parted": {
 		"disk": "/dev/sdb",
 		"commands": [

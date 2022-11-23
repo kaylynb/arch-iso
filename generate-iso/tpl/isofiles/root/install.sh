@@ -26,8 +26,12 @@ do sleep 1; done
 until cryptsetup open --persistent --allow-discards --type luks "$DISK_SYSTEM" root
 do sleep 1; done
 
+sleep 2
+
 # Setup btrfs
 mkfs.btrfs -L "$SYSTEM_HOSTNAME" /dev/mapper/root
+
+sleep 2
 
 ROOT_UUID=`lsblk -o UUID /dev/mapper/root | tail -1`
 mount UUID="$ROOT_UUID" /mnt
