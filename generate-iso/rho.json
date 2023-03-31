@@ -2,24 +2,25 @@
 	"hostname": "rho",
 	"localtime": "America/Los_Angeles",
 	"network_wired": true,
-	"user_snapshots": true,
+	"user_snapshots": false,
+	"sshd": true,
 	"parted": {
-		"disk": "/dev/sdb",
+		"disk": "/dev/nvme0n1",
 		"commands": [
 			"mklabel gpt",
-			"mkpart ESP fat32 1MiB 513MiB",
+			"mkpart ESP fat32 1MiB 2049MiB",
 			"set 1 boot on",
-			"mkpart Arch ext4 513MiB 100%"
+			"mkpart Arch ext4 2049MiB 100%"
 		]
 	},
 	"fs": {
 		"boot": {
 			"format": true,
-			"disk": "/dev/sdb1"
+			"disk": "/dev/nvme0n1p1"
 		},
 		"system": {
 			"encrypted": true,
-			"disk": "/dev/sdb2"
+			"disk": "/dev/nvme0n1p2"
 		}
 	},
 	"packages": {
